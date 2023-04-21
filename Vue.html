@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lista de tareas con Vue</title>
+	<script src="https://unpkg.com/vue"></script>
+	<style>
+		.list {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+
+		.list li {
+			display: flex;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+		.list-item-text {
+			margin-right: 10px;
+			flex-grow: 1;
+		}
+
+		.list-item-remove {
+			margin-left: 10px;
+			cursor: pointer;
+		}
+
+		.list-item-check {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			border: 1px solid #ccc;
+			margin-right: 10px;
+			cursor: pointer;
+		}
+
+		.list-item-check.checked {
+			background-color: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<form @submit.prevent="addTask">
+			<input type="text" v-model="newTask" placeholder="Agregar tarea">
+			<button>Agregar</button>
+		</form>
+		<ul class="list">
+			<li v-for="(task, index) in tasks" :key="index">
+				<div class="list-item-check" @click="toggleTask(index)" :class="{ checked: task.completed }"></div>
+				<span class="list-item-text" :class="{ checked: task.completed }">{{ task.text }}</span>
+				<button class="list-item-remove" @click="removeTask(index)">Quitar</button>
+			</li>
+		</ul>
+	</div>
+
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				tasks: [
+					{ text: 'Comprar leche', completed: false },
+					{ text: 'Sacar la basura', completed: true },
+					{ text: 'Llamar al doctor', completed: false },
+				],
+				newTask: '',
+			},
+			methods: {
+				addTask() {
+					if (this.newTask) {
+						this.tasks.push({ text: this.newTask, completed: false });
+						this.newTask = '';
+					}
+				},
+				removeTask(index) {
+					this.tasks.splice(index, 1);
+				},
+				toggleTask(index) {
+					this.tasks[index].completed = !this.tasks[index].completed;
+				},
+			},
+		});
+	</script>
+</body>
+</html>
